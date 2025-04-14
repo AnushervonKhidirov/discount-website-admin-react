@@ -15,11 +15,18 @@
     "rootDirs": [".", "./.react-router/types"],
     "baseUrl": ".",
     "paths": {
-      "~/*": ["./app/*"]
+      "~pages/*": ["./app/pages/*"],
+      "~type/*": ["./app/util/type/*"],
+      "~service/*": ["./app/service/*"],
+      "~constant/*": ["./app/util/constant/*"],
+      "~error/*": ["./app/util/error/*"],
+      "~helper/*": ["./app/util/helper/*"],
+      "~component/*": ["./app/component/*"]
     },
     "esModuleInterop": true,
     "verbatimModuleSyntax": true,
     "noEmit": true,
+    "strictNullChecks": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true
