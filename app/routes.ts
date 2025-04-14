@@ -6,6 +6,7 @@ const routes: RouteConfig = [
   index('routes/home.tsx'),
   route('login', 'routes/login.tsx'),
   route('users', 'routes/users.tsx'),
+  route('banks', 'routes/banks.tsx'),
 ];
 
 export default routes;
