@@ -1,12 +1,10 @@
-import { HomePage } from "~pages/home/home";
-
-export function meta() {
-  return [
-    { title: 'New React Router App' },
-    { name: 'description', content: 'Welcome to React Router!' },
-  ];
-}
+import WithHeader from 'app/hoc/with-header/with-header';
+import { HomePage } from '~pages/home/home';
 
 export default function Home() {
-  return <HomePage />;
+  return (
+    <WithHeader>
+      <HomePage />
+    </WithHeader>
+  );
 }
