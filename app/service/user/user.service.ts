@@ -9,11 +9,34 @@ import { isError, returnError } from '~helper/response.helper';
 import { CookieService } from '~service/cookie/cookie.service';
 
 export class UserService {
-  async getUser(id: number): ReturnPromiseWithErr<User> {
+  async getMyInfo(): ReturnPromiseWithErr<User> {
     try {
       const cookieService = new CookieService();
+      const { accessToken } = cookieService.getCookie<Token>(['accessToken']);
 
-      const { accessToken } = await cookieService.getCookie<Token>(['accessToken']);
+      const { data } = await axios.get<User | HttpError>(Endpoint.GetMyInfo, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+        validateStatus: () => true,
+      });
+
+      if (isError(data)) throw new HttpError(data.status, data.error, data.message);
+
+      const user = {
+        ...data,
+        createdAt: new Date(data.createdAt),
+        updatedAt: new Date(data.updatedAt),
+      };
+
+      return [user, null];
+    } catch (err) {
+      return returnError(err);
+    }
+  }
+
+  async get(id: number): ReturnPromiseWithErr<User> {
+    try {
+      const cookieService = new CookieService();
+      const { accessToken } = cookieService.getCookie<Token>(['accessToken']);
 
       const { data } = await axios.get<User | HttpError>(
         Endpoint.GetUser.replace(':id', id.toString()),
@@ -37,11 +60,10 @@ export class UserService {
     }
   }
 
-  async getAllUsers(): ReturnPromiseWithErr<User[]> {
+  async getAll(): ReturnPromiseWithErr<User[]> {
     try {
       const cookieService = new CookieService();
-
-      const { accessToken } = await cookieService.getCookie<Token>(['accessToken']);
+      const { accessToken } = cookieService.getCookie<Token>(['accessToken']);
 
       const { data } = await axios.get<User[] | HttpError>(Endpoint.GetAllUsers, {
         headers: { Authorization: `Bearer ${accessToken}` },

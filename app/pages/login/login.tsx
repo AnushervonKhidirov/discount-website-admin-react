@@ -6,11 +6,10 @@ import { Form, Input, notification } from 'antd/es';
 
 import { AuthService } from '~service/auth/auth.service';
 import { CookieService } from '~service/cookie/cookie.service';
-
 import { Page } from '~constant/link.constant';
 
 const LoginPage = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [api, context] = notification.useNotification();
 
   const authService = new AuthService();
@@ -21,7 +20,7 @@ const LoginPage = () => {
     if (err) return api.error({ message: err.error, description: err.message });
 
     await cookieService.setCookie(token);
-    navigate(Page.Profile)
+    navigate(Page.Profile);
   };
 
   return (

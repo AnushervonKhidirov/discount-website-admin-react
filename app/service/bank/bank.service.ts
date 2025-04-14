@@ -13,7 +13,7 @@ export class BankService {
     try {
       const cookieService = new CookieService();
 
-      const { accessToken } = await cookieService.getCookie<Token>(['accessToken']);
+      const { accessToken } = cookieService.getCookie<Token>(['accessToken']);
 
       const { data } = await axios.get<Bank | HttpError>(
         Endpoint.GetBank.replace(':id', id.toString()),
@@ -41,7 +41,7 @@ export class BankService {
     try {
       const cookieService = new CookieService();
 
-      const { accessToken } = await cookieService.getCookie<Token>(['accessToken']);
+      const { accessToken } = cookieService.getCookie<Token>(['accessToken']);
 
       const { data } = await axios.get<Bank[] | HttpError>(Endpoint.GetAllBanks, {
         headers: { Authorization: `Bearer ${accessToken}` },
@@ -66,7 +66,7 @@ export class BankService {
     try {
       const cookieService = new CookieService();
 
-      const { accessToken } = await cookieService.getCookie<Token>(['accessToken']);
+      const { accessToken } = cookieService.getCookie<Token>(['accessToken']);
 
       const { data } = await axios.post<Bank | HttpError>(Endpoint.CreateBank, bankDto, {
         headers: { Authorization: `Bearer ${accessToken}` },
@@ -91,7 +91,7 @@ export class BankService {
     try {
       const cookieService = new CookieService();
 
-      const { accessToken } = await cookieService.getCookie<Token>(['accessToken']);
+      const { accessToken } = cookieService.getCookie<Token>(['accessToken']);
 
       const formData = new FormData();
       formData.append('file', file);
