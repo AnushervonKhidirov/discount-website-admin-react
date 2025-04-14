@@ -20,7 +20,7 @@ const WithHeader: FC<PropsWithChildren> = ({ children }) => {
 
   const { setUser } = useUserStore();
 
-  const { accessToken } = cookieService.getCookie<{ accessToken: string }>(['accessToken']);
+  const { accessToken } = cookieService.get<{ accessToken: string }>(['accessToken']);
   if (!accessToken) navigate(Page.Login);
 
   async function getUserInfo() {

@@ -17,13 +17,13 @@ export const requestWithRefresh = async <T>(
         const authService = new AuthService();
         const cookieService = new CookieService();
 
-        const { refreshToken } = cookieService.getCookie<Token>(['refreshToken']);
+        const { refreshToken } = cookieService.get<Token>(['refreshToken']);
         if (!refreshToken) throw new HttpError(401, 'Unauthorized', 'Token not found');
 
         const [tokens, tokenErr] = await authService.refreshToken(refreshToken);
         if (tokenErr) throw tokenErr;
 
-        cookieService.setCookie(tokens);
+        cookieService.set(tokens);
 
         const [response, requestErr] = await request();
         if (requestErr) throw requestErr;

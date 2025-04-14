@@ -9,11 +9,11 @@ import { isError, returnError } from '~helper/response.helper';
 import { CookieService } from '~service/cookie/cookie.service';
 
 export class BankService {
-  async getBank(id: number): ReturnPromiseWithErr<Bank> {
-    try {
-      const cookieService = new CookieService();
+  private readonly cookieService = new CookieService();
 
-      const { accessToken } = cookieService.getCookie<Token>(['accessToken']);
+  async get(id: number): ReturnPromiseWithErr<Bank> {
+    try {
+      const { accessToken } = this.cookieService.get<Token>(['accessToken']);
 
       const { data } = await axios.get<Bank | HttpError>(
         Endpoint.GetBank.replace(':id', id.toString()),
@@ -37,11 +37,9 @@ export class BankService {
     }
   }
 
-  async getAllBanks(): ReturnPromiseWithErr<Bank[]> {
+  async getAll(): ReturnPromiseWithErr<Bank[]> {
     try {
-      const cookieService = new CookieService();
-
-      const { accessToken } = cookieService.getCookie<Token>(['accessToken']);
+      const { accessToken } = this.cookieService.get<Token>(['accessToken']);
 
       const { data } = await axios.get<Bank[] | HttpError>(Endpoint.GetAllBanks, {
         headers: { Authorization: `Bearer ${accessToken}` },
@@ -64,9 +62,7 @@ export class BankService {
 
   async create(bankDto: CreateBankData): ReturnPromiseWithErr<Bank> {
     try {
-      const cookieService = new CookieService();
-
-      const { accessToken } = cookieService.getCookie<Token>(['accessToken']);
+      const { accessToken } = this.cookieService.get<Token>(['accessToken']);
 
       const { data } = await axios.post<Bank | HttpError>(Endpoint.CreateBank, bankDto, {
         headers: { Authorization: `Bearer ${accessToken}` },
@@ -89,9 +85,7 @@ export class BankService {
 
   async uploadLogo(id: number, file: File): ReturnPromiseWithErr<Bank> {
     try {
-      const cookieService = new CookieService();
-
-      const { accessToken } = cookieService.getCookie<Token>(['accessToken']);
+      const { accessToken } = this.cookieService.get<Token>(['accessToken']);
 
       const formData = new FormData();
       formData.append('file', file);

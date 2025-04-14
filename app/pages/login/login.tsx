@@ -19,7 +19,7 @@ const LoginPage = () => {
     const [token, err] = await authService.signin(values);
     if (err) return api.error({ message: err.error, description: err.message });
 
-    await cookieService.setCookie(token);
+    cookieService.set(token);
     navigate(Page.Profile);
   };
 

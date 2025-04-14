@@ -1,13 +1,13 @@
 import type { Cookie } from '~type/common.type';
 
 export class CookieService {
-  setCookie(cookie: Cookie) {
+  set(cookie: Cookie) {
     for (const name in cookie) {
       document.cookie = `${name}=${cookie[name]}`;
     }
   }
 
-  getCookie<T = unknown>(names?: (keyof T)[]): Cookie<T> {
+  get<T = unknown>(names?: (keyof T)[]): Cookie<T> {
     const cookie: Cookie = {};
     const cookieArr = document.cookie.replaceAll(' ', '').split(';');
 
@@ -24,7 +24,7 @@ export class CookieService {
     return <Cookie<T>>cookie;
   }
 
-  deleteCookie() {
+  deleteAll() {
     const cookieArr = document.cookie.replaceAll(' ', '').split(';');
 
     cookieArr.forEach(cookieItem => {

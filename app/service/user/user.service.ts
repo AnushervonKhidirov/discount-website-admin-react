@@ -9,10 +9,11 @@ import { isError, returnError } from '~helper/response.helper';
 import { CookieService } from '~service/cookie/cookie.service';
 
 export class UserService {
+  private readonly cookieService = new CookieService();
+
   async getMyInfo(): ReturnPromiseWithErr<User> {
     try {
-      const cookieService = new CookieService();
-      const { accessToken } = cookieService.getCookie<Token>(['accessToken']);
+      const { accessToken } = this.cookieService.get<Token>(['accessToken']);
 
       const { data } = await axios.get<User | HttpError>(Endpoint.GetMyInfo, {
         headers: { Authorization: `Bearer ${accessToken}` },
@@ -35,8 +36,7 @@ export class UserService {
 
   async get(id: number): ReturnPromiseWithErr<User> {
     try {
-      const cookieService = new CookieService();
-      const { accessToken } = cookieService.getCookie<Token>(['accessToken']);
+      const { accessToken } = this.cookieService.get<Token>(['accessToken']);
 
       const { data } = await axios.get<User | HttpError>(
         Endpoint.GetUser.replace(':id', id.toString()),
@@ -62,8 +62,7 @@ export class UserService {
 
   async getAll(): ReturnPromiseWithErr<User[]> {
     try {
-      const cookieService = new CookieService();
-      const { accessToken } = cookieService.getCookie<Token>(['accessToken']);
+      const { accessToken } = this.cookieService.get<Token>(['accessToken']);
 
       const { data } = await axios.get<User[] | HttpError>(Endpoint.GetAllUsers, {
         headers: { Authorization: `Bearer ${accessToken}` },
