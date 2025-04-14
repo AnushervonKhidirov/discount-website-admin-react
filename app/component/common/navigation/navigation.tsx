@@ -2,6 +2,7 @@ import type { FC } from 'react';
 import type { MenuProps } from 'antd/es';
 import type { AdditionalProps } from '~type/common.type';
 
+import { NavLink } from 'react-router';
 import { Menu } from 'antd/es';
 import { Page } from '~constant/link.constant';
 
@@ -12,23 +13,23 @@ type MenuItem = Required<MenuProps>['items'][number];
 
 const menuItems: MenuItem[] = [
   {
-    label: <a href={Page.Users}>Users</a>,
+    label: <NavLink to={Page.Users}>Users</NavLink>,
     key: getFromUrl(Page.Users),
   },
   {
-    label: <a href={Page.Companies}>Companies</a>,
+    label: <NavLink to={Page.Companies}>Companies</NavLink>,
     key: getFromUrl(Page.Companies),
   },
   {
-    label: <a href={Page.Banks}>Banks</a>,
+    label: <NavLink to={Page.Banks}>Banks</NavLink>,
     key: getFromUrl(Page.Banks),
   },
   {
-    label: <a href={Page.Discounts}>Discounts</a>,
+    label: <NavLink to={Page.Discounts}>Discounts</NavLink>,
     key: getFromUrl(Page.Discounts),
   },
   {
-    label: <a href={Page.Cashbacks}>Cashback</a>,
+    label: <NavLink to={Page.Cashbacks}>Cashback</NavLink>,
     key: getFromUrl(Page.Cashbacks),
   },
 ];
