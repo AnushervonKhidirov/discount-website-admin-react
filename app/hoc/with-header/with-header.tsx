@@ -9,6 +9,8 @@ import { useUserStore } from '~store/user.store';
 import { Page } from '~constant/link.constant';
 
 import Header from '~component/common/header/header';
+import Content from '~component/common/content/content';
+import { requestWithRefresh } from '~helper/request.helper';
 
 const WithHeader: FC<PropsWithChildren> = ({ children }) => {
   const navigate = useNavigate();
@@ -22,7 +24,7 @@ const WithHeader: FC<PropsWithChildren> = ({ children }) => {
   if (!accessToken) navigate(Page.Login);
 
   async function getUserInfo() {
-    const [user, err] = await userService.getMyInfo();
+    const [user, err] = await requestWithRefresh(() => userService.getMyInfo());
     if (err) return navigate(Page.Login);
     setUser(user);
   }
@@ -34,7 +36,9 @@ const WithHeader: FC<PropsWithChildren> = ({ children }) => {
   return (
     <>
       <Header />
-      <main>{children}</main>
+      <main>
+        <Content>{children}</Content>
+      </main>
     </>
   );
 };
