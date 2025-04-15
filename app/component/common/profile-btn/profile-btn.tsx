@@ -19,7 +19,7 @@ const ProfileBtn: FC<AdditionalProps> = ({ className }) => {
         <NavLink to={Page.Profile}>
           <Avatar className={classes.avatar} icon={<UserOutlined />} shape="square" />
           <div className={classes.username}>{user.username}</div>
-          <div className={classes.role}>{user.role}</div>
+          <div className={classes.role}>{user.role.replaceAll('_', ' ').toLocaleLowerCase()}</div>
         </NavLink>
       </Button>
     )

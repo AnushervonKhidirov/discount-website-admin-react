@@ -1,8 +1,8 @@
-// import '@ant-design/v5-patch-for-react-19';
-import { useState, type FC } from 'react';
+import type { FC } from 'react';
 import type { FormProps as FormPropsAnt } from 'antd/es';
 import type { FormProps } from './form.type';
 
+import { useState } from 'react';
 import { Form as FormAnt, Button, Typography } from 'antd/es';
 
 const { Title } = Typography;
