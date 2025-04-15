@@ -1,6 +1,6 @@
 import type { Dispatch, SetStateAction } from 'react';
 import type { FormInstance, TableColumnsType } from 'antd/es';
-import type { RcFile } from 'antd/es/upload';
+import type { RcFile, UploadFile } from 'antd/es/upload';
 import type { Bank } from '~type/bank.type';
 
 import { Flex, Tag, Button, Input, Form, Switch, Upload } from 'antd/es';
@@ -18,9 +18,8 @@ export function columns(
   const bankService = new BankService();
 
   async function uploadLogo(id: number, file: RcFile) {
-    // const [bank, err] = await requestWithRefresh(() => bankService.uploadLogo(id, file));
-    // if (err) return;
-    // console.log(bank);
+    const [bank, err] = await requestWithRefresh(() => bankService.uploadLogo(id, file));
+    if (err) return;
   }
 
   const columns: TableColumnsType<Bank> = [
@@ -59,6 +58,16 @@ export function columns(
       key: 'logo',
       render: (logo: Bank['logoUrl'], bank: Bank) => {
         if (editingKey === bank.id) {
+          const defaultFileList: UploadFile<any>[] | undefined = logo
+            ? [
+                {
+                  uid: '-1',
+                  name: bank.name,
+                  url: `${Endpoint.ServerPath}/${logo}`,
+                },
+              ]
+            : undefined;
+
           return (
             <Form.Item label={null} valuePropName="file" style={{ margin: 0 }}>
               <Upload
@@ -66,13 +75,7 @@ export function columns(
                 listType="picture-card"
                 multiple={false}
                 maxCount={1}
-                defaultFileList={[
-                  {
-                    uid: '-1',
-                    name: bank.name,
-                    url: `${Endpoint.ServerPath}/${logo}`,
-                  },
-                ]}
+                defaultFileList={defaultFileList}
               >
                 <button
                   style={{ color: 'inherit', cursor: 'inherit', border: 0, background: 'none' }}
@@ -86,13 +89,15 @@ export function columns(
           );
         }
 
-        return (
+        return logo ? (
           <img
             draggable={false}
             src={`${Endpoint.ServerPath}/${logo}`}
             alt={bank.name}
             height={25}
           />
+        ) : (
+          <span style={{ fontWeight: 700 }}>No Logo</span>
         );
       },
     },
