@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-duplicate-enum-values */
 export enum Endpoint {
+  ServerPath = 'http://localhost:4000',
   Signin = 'http://localhost:4000/auth/sign-in',
   RefreshToken = 'http://localhost:4000/auth/refresh-token',
   GetUser = 'http://localhost:4000/users/:id',
