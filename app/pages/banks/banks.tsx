@@ -2,7 +2,7 @@ import type { Bank } from '~type/bank.type';
 
 import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router';
-import { notification, Table, Button } from 'antd/es';
+import { notification, Table, Button, Form } from 'antd/es';
 import { BankService } from '~service/bank/bank.service';
 import { requestWithRefresh } from '~helper/request.helper';
 
@@ -20,7 +20,10 @@ const CreateBankBtn = () => {
 const BanksPage = () => {
   const [api, context] = notification.useNotification();
   const bankService = new BankService();
+
+  const [form] = Form.useForm<Bank>();
   const [banks, setBanks] = useState<Bank[]>([]);
+  const [editingKey, setEditingKey] = useState<number | null>(null);
 
   async function getBanks() {
     const [banks, err] = await requestWithRefresh(() => bankService.getAll());
@@ -32,6 +35,13 @@ const BanksPage = () => {
     }
   }
 
+  function saveBankData() {
+    const formData = form.getFieldsValue();
+    form.setFieldValue('archived', !formData.archived);
+    console.log(form.getFieldsValue());
+    setEditingKey(null);
+  }
+
   useEffect(() => {
     getBanks();
   }, []);
@@ -39,12 +49,14 @@ const BanksPage = () => {
   return (
     <>
       {context}
-      <Table<Bank>
-        dataSource={banks}
-        columns={columns}
-        footer={CreateBankBtn}
-        rowKey={({ id }) => id}
-      />
+      <Form form={form}>
+        <Table<Bank>
+          dataSource={banks}
+          columns={columns(editingKey, setEditingKey, form, saveBankData)}
+          footer={CreateBankBtn}
+          rowKey={({ id }) => id}
+        />
+      </Form>
     </>
   );
 };
