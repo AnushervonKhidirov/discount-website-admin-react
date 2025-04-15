@@ -83,6 +83,7 @@ export function columns(
       title: 'Status',
       dataIndex: 'archived',
       key: 'archived',
+      width: '7em',
       render: (archived: User['archived'], user: User) => {
         if (editingKey === user.id) {
           return (

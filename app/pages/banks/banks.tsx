@@ -1,19 +1,26 @@
 import type { Bank } from '~type/bank.type';
 
 import { useEffect, useState } from 'react';
-import { NavLink } from 'react-router';
-import { notification, Table, Button, Form } from 'antd/es';
+import { notification, Table, Button, Form, Input } from 'antd/es';
+import { Form as MyForm } from '~component/common/form/form';
 import { BankService } from '~service/bank/bank.service';
 import { requestWithRefresh } from '~helper/request.helper';
 
-import { Page } from '~constant/link.constant';
 import { columns } from './coldef';
 
-const CreateBankBtn = () => {
-  return (
-    <NavLink to={Page.BankCreate}>
-      <Button type="primary">Create new bank</Button>
-    </NavLink>
+const CreateBank = () => {
+  const [showCreateForm, setShowCreateForm] = useState<boolean>(false);
+
+  return showCreateForm ? (
+    <MyForm>
+      <Form.Item name="name" rules={[{ required: true, message: 'Bank name is required' }]}>
+        <Input placeholder="Bank name" />
+      </Form.Item>
+    </MyForm>
+  ) : (
+    <Button type="primary" onClick={() => setShowCreateForm(true)}>
+      Create new bank
+    </Button>
   );
 };
 
@@ -53,7 +60,7 @@ const BanksPage = () => {
         <Table<Bank>
           dataSource={banks}
           columns={columns(editingKey, setEditingKey, form, saveBankData)}
-          footer={CreateBankBtn}
+          footer={CreateBank}
           rowKey={({ id }) => id}
         />
       </Form>

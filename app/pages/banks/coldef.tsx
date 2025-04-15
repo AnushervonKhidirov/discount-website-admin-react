@@ -112,6 +112,7 @@ export function columns(
       title: 'Status',
       dataIndex: 'archived',
       key: 'archived',
+      width: '7em',
       render: (archived: Bank['archived'], bank: Bank) => {
         if (editingKey === bank.id) {
           return (
