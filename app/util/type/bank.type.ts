@@ -1,7 +1,7 @@
 export type Bank = Readonly<{
   id: number;
   name: string;
-  logoUrl?: string;
+  logoUrl: null;
   archived: boolean;
   createdAt: Date;
   updatedAt: Date;
