@@ -1,16 +1,11 @@
-export type Bank = Readonly<{
-  id: number;
+export type Bank = {
+  readonly id: number;
   name: string;
-  logoUrl: null;
+  logoUrl: string | null;
   archived: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-}>;
-
-export type CreateBankData = {
-  name: string;
+  readonly createdAt: Date;
+  readonly updatedAt: Date;
 };
 
-export type UpdateBankData = CreateBankData & {
-  file: File
-}
+export type CreateBankData = Pick<Bank, 'name'>;
+export type UpdateBankData = Pick<Bank, 'name' | 'archived'>;
