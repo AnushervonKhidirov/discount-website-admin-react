@@ -1,4 +1,4 @@
-import type { Bank, CreateBankData } from '~type/bank.type';
+import type { Bank, CreateBankData, UpdateBankData } from '~type/bank.type';
 import type { Token } from '~type/auth.type';
 import type { ReturnPromiseWithErr } from '~type/return-with-error.type';
 
@@ -16,7 +16,7 @@ export class BankService {
       const { accessToken } = this.cookieService.get<Token>(['accessToken']);
 
       const { data } = await axios.get<Bank | HttpError>(
-        Endpoint.GetBank.replace(':id', id.toString()),
+        Endpoint.Bank.replace(':id', id.toString()),
         {
           headers: { Authorization: `Bearer ${accessToken}` },
           validateStatus: () => true,
@@ -41,7 +41,7 @@ export class BankService {
     try {
       const { accessToken } = this.cookieService.get<Token>(['accessToken']);
 
-      const { data } = await axios.get<Bank[] | HttpError>(Endpoint.GetAllBanks, {
+      const { data } = await axios.get<Bank[] | HttpError>(Endpoint.Banks, {
         headers: { Authorization: `Bearer ${accessToken}` },
         validateStatus: () => true,
       });
@@ -64,10 +64,37 @@ export class BankService {
     try {
       const { accessToken } = this.cookieService.get<Token>(['accessToken']);
 
-      const { data } = await axios.post<Bank | HttpError>(Endpoint.CreateBank, bankDto, {
+      const { data } = await axios.post<Bank | HttpError>(Endpoint.Banks, bankDto, {
         headers: { Authorization: `Bearer ${accessToken}` },
         validateStatus: () => true,
       });
+
+      if (isError(data)) throw new HttpError(data.status, data.error, data.message);
+
+      const bank = {
+        ...data,
+        createdAt: new Date(data.createdAt),
+        updatedAt: new Date(data.updatedAt),
+      };
+
+      return [bank, null];
+    } catch (err) {
+      return returnError(err);
+    }
+  }
+
+  async update(id: number, bankDto: UpdateBankData): ReturnPromiseWithErr<Bank> {
+    try {
+      const { accessToken } = this.cookieService.get<Token>(['accessToken']);
+
+      const { data } = await axios.put<Bank | HttpError>(
+        Endpoint.Bank.replace(':id', id.toString()),
+        bankDto,
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+          validateStatus: () => true,
+        },
+      );
 
       if (isError(data)) throw new HttpError(data.status, data.error, data.message);
 
