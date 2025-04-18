@@ -38,11 +38,35 @@ const BanksPage = () => {
     }
   }
 
-  function saveBankData() {
+  function saveBankData(id: number, file?: File) {
+    file ? uploadLogo(id, file) : updateBankInfo(id);
+  }
+
+  async function uploadLogo(id: number, file: File) {
+    const [bank, err] = await requestWithRefresh(() => bankService.uploadLogo(id, file));
+
+    if (err) {
+      api.error({ message: err.error, description: err.message });
+    } else {
+      api.success({ message: 'Success', description: `${bank.name} logo updated` });
+    }
+  }
+
+  async function updateBankInfo(id: number) {
     const formData = form.getFieldsValue();
-    form.setFieldValue('archived', !formData.archived);
-    console.log(form.getFieldsValue());
+    formData.archived = !formData.archived;
     setEditingKey(null);
+
+    const [updatedBank, err] = await requestWithRefresh(() => bankService.update(id, formData));
+
+    if (err) {
+      api.error({ message: err.error, description: err.message });
+    } else {
+      api.success({ message: 'Success', description: `${updatedBank.name} updated` });
+      setBanks(banks => {
+        return banks.map(bank => (bank.id === updatedBank.id ? updatedBank : bank));
+      });
+    }
   }
 
   async function createBank(value: { name: string }) {
@@ -65,7 +89,7 @@ const BanksPage = () => {
       <Form form={form}>
         <Table<Bank>
           dataSource={banks}
-          columns={columns(editingKey, setEditingKey, form, saveBankData)}
+          columns={columns(form, editingKey, setEditingKey, saveBankData)}
           footer={() => <CreateBank openCreateBankForm={setOpenCreateBankForm} />}
           rowKey={({ id }) => id}
         />

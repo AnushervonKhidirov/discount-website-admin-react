@@ -1,27 +1,18 @@
 import type { Dispatch, SetStateAction } from 'react';
 import type { FormInstance, TableColumnsType } from 'antd/es';
-import type { RcFile, UploadFile } from 'antd/es/upload';
+import type { UploadFile } from 'antd/es/upload';
 import type { Bank } from '~type/bank.type';
 
 import { Flex, Tag, Button, Input, Form, Switch, Upload } from 'antd/es';
 import { PlusOutlined } from '@ant-design/icons';
-import { requestWithRefresh } from '~helper/request.helper';
-import { BankService } from '~service/bank/bank.service';
 import { Endpoint } from '~constant/endpoint.constant';
 
 export function columns(
+  form: FormInstance<Bank>,
   editingKey: number | null,
   setEditingKey: Dispatch<SetStateAction<number | null>>,
-  form: FormInstance<Bank>,
-  saveBankData: () => void,
+  saveBankData: (id: number, file?: File) => void,
 ) {
-  const bankService = new BankService();
-
-  async function uploadLogo(id: number, file: RcFile) {
-    const [bank, err] = await requestWithRefresh(() => bankService.uploadLogo(id, file));
-    if (err) return;
-  }
-
   const columns: TableColumnsType<Bank> = [
     {
       title: 'ID',
@@ -35,8 +26,6 @@ export function columns(
       width: '13em',
       render: (name: Bank['name'], bank: Bank) => {
         if (editingKey === bank.id) {
-          console.log(name);
-
           return (
             <Form.Item
               name="name"
@@ -71,7 +60,7 @@ export function columns(
           return (
             <Form.Item label={null} valuePropName="file" style={{ margin: 0 }}>
               <Upload
-                beforeUpload={file => uploadLogo(bank.id, file)}
+                beforeUpload={file => saveBankData(bank.id, file)}
                 listType="picture-card"
                 multiple={false}
                 maxCount={1}
@@ -146,7 +135,7 @@ export function columns(
         if (editingKey === bank.id) {
           return (
             <Flex gap={10} justify="center">
-              <Button onClick={saveBankData}>Save</Button>
+              <Button onClick={() => saveBankData(bank.id)}>Save</Button>
               <Button onClick={() => setEditingKey(null)}>Cancel</Button>
             </Flex>
           );
