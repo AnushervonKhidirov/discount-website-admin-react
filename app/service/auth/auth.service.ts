@@ -4,7 +4,7 @@ import type { ReturnPromiseWithErr } from '~type/return-with-error.type';
 import axios from 'axios';
 import { Endpoint } from '~constant/endpoint.constant';
 import { HttpError } from '~error/http.error';
-import { isError, returnError } from '~helper/response.helper';
+import { isHttpError, returnError } from '~helper/response.helper';
 
 export class AuthService {
   async signin(body: LoginData): ReturnPromiseWithErr<Token> {
@@ -13,7 +13,7 @@ export class AuthService {
         validateStatus: () => true,
       });
 
-      if (isError(user)) throw new HttpError(user.status, user.error, user.message);
+      if (isHttpError(user)) throw new HttpError(user.status, user.error, user.message);
 
       return [user, null];
     } catch (err) {
@@ -31,7 +31,7 @@ export class AuthService {
         },
       );
 
-      if (isError(token)) throw new HttpError(token.status, token.error, token.message);
+      if (isHttpError(token)) throw new HttpError(token.status, token.error, token.message);
 
       return [token, null];
     } catch (err) {

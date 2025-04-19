@@ -3,7 +3,7 @@ import type { ReturnWithErr } from '~type/return-with-error.type';
 import { CustomError } from '~error/custom.error';
 import { HttpError } from '~error/http.error';
 
-export function isError(data: object | HttpError): data is HttpError {
+export function isHttpError(data: object | HttpError): data is HttpError {
   return (data as HttpError).error !== undefined;
 }
 

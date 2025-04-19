@@ -5,7 +5,7 @@ import type { ReturnPromiseWithErr } from '~type/return-with-error.type';
 import axios from 'axios';
 import { Endpoint } from '~constant/endpoint.constant';
 import { HttpError } from '~error/http.error';
-import { isError, returnError } from '~helper/response.helper';
+import { isHttpError, returnError } from '~helper/response.helper';
 import { CookieService } from '~service/cookie/cookie.service';
 
 export class BankService {
@@ -23,7 +23,7 @@ export class BankService {
         },
       );
 
-      if (isError(data)) throw new HttpError(data.status, data.error, data.message);
+      if (isHttpError(data)) throw new HttpError(data.status, data.error, data.message);
 
       const bank = {
         ...data,
@@ -46,7 +46,7 @@ export class BankService {
         validateStatus: () => true,
       });
 
-      if (isError(data)) throw new HttpError(data.status, data.error, data.message);
+      if (isHttpError(data)) throw new HttpError(data.status, data.error, data.message);
 
       const banks = data.map(bank => ({
         ...bank,
@@ -69,7 +69,7 @@ export class BankService {
         validateStatus: () => true,
       });
 
-      if (isError(data)) throw new HttpError(data.status, data.error, data.message);
+      if (isHttpError(data)) throw new HttpError(data.status, data.error, data.message);
 
       const bank = {
         ...data,
@@ -96,7 +96,7 @@ export class BankService {
         },
       );
 
-      if (isError(data)) throw new HttpError(data.status, data.error, data.message);
+      if (isHttpError(data)) throw new HttpError(data.status, data.error, data.message);
 
       const bank = {
         ...data,
@@ -126,7 +126,7 @@ export class BankService {
         },
       );
 
-      if (isError(data)) throw new HttpError(data.status, data.error, data.message);
+      if (isHttpError(data)) throw new HttpError(data.status, data.error, data.message);
 
       const bank = {
         ...data,

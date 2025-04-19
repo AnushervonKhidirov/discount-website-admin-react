@@ -5,7 +5,7 @@ import type { ReturnPromiseWithErr } from '~type/return-with-error.type';
 import axios from 'axios';
 import { Endpoint } from '~constant/endpoint.constant';
 import { HttpError } from '~error/http.error';
-import { isError, returnError } from '~helper/response.helper';
+import { isHttpError, returnError } from '~helper/response.helper';
 import { CookieService } from '~service/cookie/cookie.service';
 
 export class UserService {
@@ -20,7 +20,7 @@ export class UserService {
         validateStatus: () => true,
       });
 
-      if (isError(data)) throw new HttpError(data.status, data.error, data.message);
+      if (isHttpError(data)) throw new HttpError(data.status, data.error, data.message);
 
       const user = {
         ...data,
@@ -46,7 +46,7 @@ export class UserService {
         },
       );
 
-      if (isError(data)) throw new HttpError(data.status, data.error, data.message);
+      if (isHttpError(data)) throw new HttpError(data.status, data.error, data.message);
 
       const user = {
         ...data,
@@ -69,7 +69,7 @@ export class UserService {
         validateStatus: () => true,
       });
 
-      if (isError(data)) throw new HttpError(data.status, data.error, data.message);
+      if (isHttpError(data)) throw new HttpError(data.status, data.error, data.message);
 
       const users = data.map(user => ({
         ...user,
