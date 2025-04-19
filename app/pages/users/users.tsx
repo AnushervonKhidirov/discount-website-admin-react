@@ -25,11 +25,21 @@ const UsersPage = () => {
     }
   }
 
-  function saveUserData() {
+  async function saveUserData(id: number) {
     const formData = form.getFieldsValue();
-    form.setFieldValue('archived', !formData.archived);
-    console.log(form.getFieldsValue());
+    if (typeof formData.archived === 'boolean') formData.archived = !formData.archived;
     setEditingKey(null);
+
+    const [updateUser, err] = await requestWithRefresh(() => userService.update(id, formData));
+
+    if (err) {
+      api.error({ message: err.error, description: err.message });
+    } else {
+      api.success({ message: 'Success', description: `${updateUser.username} updated` });
+      setUsers(users => {
+        return users.map(user => (user.id === updateUser.id ? updateUser : user));
+      });
+    }
   }
 
   useEffect(() => {
@@ -42,7 +52,7 @@ const UsersPage = () => {
       <Form form={form}>
         <Table<User>
           dataSource={users}
-          columns={columns(editingKey, setEditingKey, form, saveUserData)}
+          columns={columns(form, editingKey, setEditingKey, saveUserData)}
           rowKey={({ id }) => id}
         />
       </Form>

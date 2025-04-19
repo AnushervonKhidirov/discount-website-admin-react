@@ -1,4 +1,4 @@
-import type { User } from '~type/user.type';
+import type { UpdateUserData, User } from '~type/user.type';
 import type { Token } from '~type/auth.type';
 import type { ReturnPromiseWithErr } from '~type/return-with-error.type';
 
@@ -15,7 +15,7 @@ export class UserService {
     try {
       const { accessToken } = this.cookieService.get<Token>(['accessToken']);
 
-      const { data } = await axios.get<User | HttpError>(Endpoint.GetMyInfo, {
+      const { data } = await axios.get<User | HttpError>(Endpoint.UserMe, {
         headers: { Authorization: `Bearer ${accessToken}` },
         validateStatus: () => true,
       });
@@ -39,7 +39,7 @@ export class UserService {
       const { accessToken } = this.cookieService.get<Token>(['accessToken']);
 
       const { data } = await axios.get<User | HttpError>(
-        Endpoint.GetUser.replace(':id', id.toString()),
+        Endpoint.User.replace(':id', id.toString()),
         {
           headers: { Authorization: `Bearer ${accessToken}` },
           validateStatus: () => true,
@@ -64,7 +64,7 @@ export class UserService {
     try {
       const { accessToken } = this.cookieService.get<Token>(['accessToken']);
 
-      const { data } = await axios.get<User[] | HttpError>(Endpoint.GetAllUsers, {
+      const { data } = await axios.get<User[] | HttpError>(Endpoint.Users, {
         headers: { Authorization: `Bearer ${accessToken}` },
         validateStatus: () => true,
       });
@@ -78,6 +78,33 @@ export class UserService {
       }));
 
       return [users, null];
+    } catch (err) {
+      return returnError(err);
+    }
+  }
+
+  async update(id: number, userDto: UpdateUserData): ReturnPromiseWithErr<User> {
+    try {
+      const { accessToken } = this.cookieService.get<Token>(['accessToken']);
+
+      const { data } = await axios.put<User | HttpError>(
+        Endpoint.User.replace(':id', id.toString()),
+        userDto,
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+          validateStatus: () => true,
+        },
+      );
+
+      if (isHttpError(data)) throw new HttpError(data.status, data.error, data.message);
+
+      const bank = {
+        ...data,
+        createdAt: new Date(data.createdAt),
+        updatedAt: new Date(data.updatedAt),
+      };
+
+      return [bank, null];
     } catch (err) {
       return returnError(err);
     }

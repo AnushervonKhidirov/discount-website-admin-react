@@ -1,11 +1,13 @@
-export type User = Readonly<{
-  id: number;
-  username: string;
-  role: Role;
+export type User = {
+  readonly id: number;
+  readonly username: string;
+  readonly role: Role;
   archived: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-}>;
+  readonly createdAt: Date;
+  readonly updatedAt: Date;
+};
+
+export type UpdateUserData = Pick<User, 'username' | 'role' | 'archived'>;
 
 export enum Role {
   SUPER_ADMIN = 'SUPER_ADMIN',

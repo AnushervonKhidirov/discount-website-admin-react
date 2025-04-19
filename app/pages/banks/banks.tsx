@@ -54,7 +54,7 @@ const BanksPage = () => {
 
   async function updateBankInfo(id: number) {
     const formData = form.getFieldsValue();
-    formData.archived = !formData.archived;
+    if (typeof formData.archived === 'boolean') formData.archived = !formData.archived;
     setEditingKey(null);
 
     const [updatedBank, err] = await requestWithRefresh(() => bankService.update(id, formData));

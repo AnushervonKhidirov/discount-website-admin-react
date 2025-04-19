@@ -7,10 +7,10 @@ import { Role } from '~type/user.type';
 import { Flex, Tag, Button, Input, Form, Select, Switch } from 'antd/es';
 
 export function columns(
+  form: FormInstance<User>,
   editingKey: number | null,
   setEditingKey: Dispatch<SetStateAction<number | null>>,
-  form: FormInstance<User>,
-  saveUserData: () => void,
+  saveUserData: (id: number) => void,
 ) {
   const columns: TableColumnsType<User> = [
     {
@@ -112,7 +112,7 @@ export function columns(
         if (editingKey === user.id && user.role !== Role.SUPER_ADMIN) {
           return (
             <Flex gap={10} justify="center">
-              <Button onClick={saveUserData}>Save</Button>
+              <Button onClick={() => saveUserData(user.id)}>Save</Button>
               <Button onClick={() => setEditingKey(null)}>Cancel</Button>
             </Flex>
           );
