@@ -98,13 +98,39 @@ export class UserService {
 
       if (isHttpError(data)) throw new HttpError(data.status, data.error, data.message);
 
-      const bank = {
+      const user = {
         ...data,
         createdAt: new Date(data.createdAt),
         updatedAt: new Date(data.updatedAt),
       };
 
-      return [bank, null];
+      return [user, null];
+    } catch (err) {
+      return returnError(err);
+    }
+  }
+
+  async delete(id: number): ReturnPromiseWithErr<User> {
+    try {
+      const { accessToken } = this.cookieService.get<Token>(['accessToken']);
+
+      const { data } = await axios.delete<User | HttpError>(
+        Endpoint.User.replace(':id', id.toString()),
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+          validateStatus: () => true,
+        },
+      );
+
+      if (isHttpError(data)) throw new HttpError(data.status, data.error, data.message);
+
+      const user = {
+        ...data,
+        createdAt: new Date(data.createdAt),
+        updatedAt: new Date(data.updatedAt),
+      };
+
+      return [user, null];
     } catch (err) {
       return returnError(err);
     }

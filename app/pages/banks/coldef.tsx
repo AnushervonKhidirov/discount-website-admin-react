@@ -135,8 +135,8 @@ export function columns(
         if (editingKey === bank.id) {
           return (
             <Flex gap={10} justify="center">
-              <Button onClick={() => saveBankData(bank.id)}>Save</Button>
               <Button onClick={() => setEditingKey(null)}>Cancel</Button>
+              <Button onClick={() => saveBankData(bank.id)}>Save</Button>
             </Flex>
           );
         }

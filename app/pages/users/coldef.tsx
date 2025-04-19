@@ -4,13 +4,15 @@ import type { DefaultOptionType } from 'antd/es/select';
 import type { User } from '~type/user.type';
 
 import { Role } from '~type/user.type';
-import { Flex, Tag, Button, Input, Form, Select, Switch } from 'antd/es';
+import { Flex, Tag, Button, Input, Form, Select, Switch, Popconfirm } from 'antd/es';
 
 export function columns(
+  currentUser: User,
   form: FormInstance<User>,
   editingKey: number | null,
   setEditingKey: Dispatch<SetStateAction<number | null>>,
   saveUserData: (id: number) => void,
+  deleteUser: (id: number) => void,
 ) {
   const columns: TableColumnsType<User> = [
     {
@@ -45,7 +47,7 @@ export function columns(
       key: 'role',
       width: '13em',
       render: (role: User['role'], user: User) => {
-        if (editingKey === user.id) {
+        if (editingKey === user.id && currentUser.role === Role.SUPER_ADMIN) {
           const options: DefaultOptionType[] = [
             { value: Role.SUPER_ADMIN },
             { value: Role.ADMIN },
@@ -112,8 +114,8 @@ export function columns(
         if (editingKey === user.id && user.role !== Role.SUPER_ADMIN) {
           return (
             <Flex gap={10} justify="center">
-              <Button onClick={() => saveUserData(user.id)}>Save</Button>
               <Button onClick={() => setEditingKey(null)}>Cancel</Button>
+              <Button onClick={() => saveUserData(user.id)}>Save</Button>
             </Flex>
           );
         }
@@ -129,6 +131,14 @@ export function columns(
             >
               Edit
             </Button>
+
+            {currentUser.role === Role.SUPER_ADMIN && (
+              <Popconfirm title={`Delete ${user.username}?`} onConfirm={() => deleteUser(user.id)}>
+                <Button disabled={user.role === Role.SUPER_ADMIN} color="danger" variant="solid">
+                  Delete
+                </Button>
+              </Popconfirm>
+            )}
           </Flex>
         );
       },
